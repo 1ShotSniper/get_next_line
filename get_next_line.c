@@ -6,14 +6,30 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/28 11:48:49 by dslogrov          #+#    #+#             */
-/*   Updated: 2018/05/28 17:06:23 by dslogrov         ###   ########.fr       */
+/*   Updated: 2018/05/28 18:04:35 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <stdio.h>
 
-size_t	ft_endl_pos(const char *s)
+static t_list	*get_file_buffer(size_t fd, t_list *start)
+{
+	t_list	*tmp;
+
+	tmp = start;
+	while (tmp)
+	{
+		if (tmp->content_size == fd)
+			return (tmp);
+		tmp = tmp->next;
+	}
+	tmp = ft_lstnew(NULL, fd);
+	ft_lstadd(&start, tmp);
+	return (tmp);
+}
+
+static size_t	ft_endl_pos(const char *s)
 {
 	char	*c;
 
@@ -23,38 +39,40 @@ size_t	ft_endl_pos(const char *s)
 	return (c - s);
 }
 
-int		get_next_line(const int fd, char **line)
+int				get_next_line(const int fd, char **line)
 {
-	char		buffer[BUFF_SIZE + 1];
-	size_t		bytes_read;
-	static char	*read_string;
-	char		*temp;
+	char			local_buffer[BUFF_SIZE + 1];
+	size_t			bytes_read;
+	static t_list	*buffer_list;
+	char			*temp;
+	t_list			*f_buf;
 
-	if (fd < 0 || line == NULL || read(fd, buffer, 0) < 0)
+	f_buf = get_file_buffer(fd, buffer_list);
+	if (fd < 0 || line == NULL || read(fd, local_buffer, 0) < 0)
 		return (-1);
-	if (!read_string)
-		read_string = ft_strnew(1);
-	while ((bytes_read = read(fd, buffer, BUFF_SIZE)))
+	if (!f_buf->content)
+		f_buf->content = ft_strnew(1);
+	while ((bytes_read = read(fd, local_buffer, BUFF_SIZE)))
 	{
-		buffer[bytes_read] = 0;
-		temp = ft_strjoin(read_string, buffer);
-		free(read_string);
-		read_string = temp;
-		if (!read_string)
+		local_buffer[bytes_read] = 0;
+		temp = ft_strjoin(f_buf->content, local_buffer);
+		free(f_buf->content);
+		f_buf->content = temp;
+		if (!f_buf->content)
 			return (-1);
-		if (ft_strchr(read_string, '\n'))
+		if (ft_strchr(f_buf->content, '\n'))
 			break ;
 	}
-	if (bytes_read < BUFF_SIZE && !*read_string)
+	if (bytes_read < BUFF_SIZE && !f_buf->content)
 		return (0);
-	*line = ft_strndup(read_string, ft_endl_pos(read_string));
-	if (ft_strlen(*line) <= ft_strlen(read_string))
+	*line = ft_strndup(f_buf->content, ft_endl_pos(f_buf->content));
+	if (ft_strlen(*line) <= ft_strlen(f_buf->content))
 	{
-		temp = ft_strdup(read_string + ft_strlen(*line) + 1);
-		free(read_string);
-		read_string = temp;
+		temp = ft_strdup(f_buf->content + ft_strlen(*line) + 1);
+		free(f_buf->content);
+		f_buf->content = temp;
 	}
 	else
-		ft_strdel(&read_string);
+		ft_lstdel(&f_buf, ft_memdel);//this deletion fails
 	return (1);
 }
