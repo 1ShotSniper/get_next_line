@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/28 11:48:49 by dslogrov          #+#    #+#             */
-/*   Updated: 2018/05/28 16:59:21 by dslogrov         ###   ########.fr       */
+/*   Updated: 2018/05/28 17:06:23 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,9 @@ int		get_next_line(const int fd, char **line)
 			break ;
 	}
 	if (bytes_read < BUFF_SIZE && !*read_string)
-		//unsure if this should set line
 		return (0);
 	*line = ft_strndup(read_string, ft_endl_pos(read_string));
-	if (ft_strlen(*line) <= ft_strlen(read_string)) //check this condition
+	if (ft_strlen(*line) <= ft_strlen(read_string))
 	{
 		temp = ft_strdup(read_string + ft_strlen(*line) + 1);
 		free(read_string);
