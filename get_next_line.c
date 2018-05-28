@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/28 11:48:49 by dslogrov          #+#    #+#             */
-/*   Updated: 2018/05/28 18:04:35 by dslogrov         ###   ########.fr       */
+/*   Updated: 2018/05/28 18:14:52 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,6 @@ int				get_next_line(const int fd, char **line)
 		f_buf->content = temp;
 	}
 	else
-		ft_lstdel(&f_buf, ft_memdel);//this deletion fails
+		ft_strdel((char **)&f_buf->content);
 	return (1);
 }
