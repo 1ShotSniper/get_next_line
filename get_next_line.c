@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/28 11:48:49 by dslogrov          #+#    #+#             */
-/*   Updated: 2018/05/29 13:30:27 by dslogrov         ###   ########.fr       */
+/*   Updated: 2018/05/29 15:02:25 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,8 @@ int				get_next_line(const int fd, char **line)
 	while ((bytes_read = read(fd, local_buffer, BUFF_SIZE)))
 	{
 		local_buffer[bytes_read] = 0;
-		SWAP_FREE(f_b->content, ft_strjoin(f_b->content, local_buffer));
+		ft_swapnfree(
+			(char **)&f_b->content, ft_strjoin(f_b->content, local_buffer));
 		CHECK_RETURN(!f_b->content, -1);
 		if (ft_strchr(f_b->content, '\n'))
 			break ;
@@ -61,7 +62,8 @@ int				get_next_line(const int fd, char **line)
 	CHECK_RETURN(bytes_read < BUFF_SIZE && !*(char *)(f_b->content), 0);
 	*line = ft_strndup(f_b->content, ft_endl_pos(f_b->content));
 	if (ft_strlen(*line) < ft_strlen(f_b->content))
-		SWAP_FREE(f_b->content, ft_strdup(f_b->content + ft_strlen(*line) + 1));
+		ft_swapnfree((char **)&f_b->content,
+			ft_strdup(f_b->content + ft_strlen(*line) + 1));
 	else
 		ft_strdel((char **)&f_b->content);
 	return (1);
