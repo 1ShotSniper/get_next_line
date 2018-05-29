@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/28 11:48:49 by dslogrov          #+#    #+#             */
-/*   Updated: 2018/05/29 15:02:25 by dslogrov         ###   ########.fr       */
+/*   Updated: 2018/05/29 15:32:20 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,20 +41,19 @@ static size_t	ft_endl_pos(const char *s)
 
 int				get_next_line(const int fd, char **line)
 {
-	char			local_buffer[BUFF_SIZE + 1];
+	char			l_b[BUFF_SIZE + 1];
 	size_t			bytes_read;
 	static t_list	*buffer_list;
 	t_list			*f_b;
 
-	CHECK_RETURN(fd < 0 || line == NULL || read(fd, local_buffer, 0) < 0, -1);
+	CHECK_RETURN(fd < 0 || line == NULL || read(fd, l_b, 0) < 0, -1);
 	f_b = get_file_buffer(fd, &buffer_list);
 	if (!f_b->content)
 		f_b->content = ft_strnew(1);
-	while ((bytes_read = read(fd, local_buffer, BUFF_SIZE)))
+	while ((bytes_read = read(fd, l_b, BUFF_SIZE)))
 	{
-		local_buffer[bytes_read] = 0;
-		ft_swapnfree(
-			(char **)&f_b->content, ft_strjoin(f_b->content, local_buffer));
+		l_b[bytes_read] = 0;
+		ft_swapnfree((char **)&f_b->content, ft_strjoin(f_b->content, l_b));
 		CHECK_RETURN(!f_b->content, -1);
 		if (ft_strchr(f_b->content, '\n'))
 			break ;
