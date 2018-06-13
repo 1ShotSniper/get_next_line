@@ -6,12 +6,11 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/28 11:48:49 by dslogrov          #+#    #+#             */
-/*   Updated: 2018/05/29 15:32:20 by dslogrov         ###   ########.fr       */
+/*   Updated: 2018/06/13 13:04:51 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
 
 static t_list	*get_file_buffer(size_t fd, t_list **start)
 {
