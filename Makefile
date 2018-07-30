@@ -9,6 +9,8 @@ CFILES=get_next_line.c
 
 OBJ=$(CFILES:%.c=build/%.o)
 
+$(NAME): $(DEPS) $(OBJ);
+
 $(REL_DEPS):
 	@make -C $(dir $@)
 
