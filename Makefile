@@ -7,27 +7,18 @@ CC=gcc
 CFLAGS=-c -Wall -Wextra -Werror -I $(INCLUDES) -Ofast
 CFILES=get_next_line.c
 
-OBJ=$(CFILES:%.c=build/%.o)
-
-$(NAME): $(REL_DEPS) $(OBJ);
+$(NAME): $(CFILES)
+	@$(CC) $(CFLAGS) $^ -o $@
 
 $(REL_DEPS):
 	@make -C $(dir $@)
 
-build/%.o: %.c
-	@mkdir -p build
-	@$(CC) $(CFLAGS) $< -o $@
-
 all: $(NAME);
 
-clean fclean re::
-	@for file in $(dir $(REL_DEPS)) ; do $(MAKE) -C $$file $@ ; done
+clean:
+	@rm -rf *.o
 
-clean::
-	@rm -rf build/
-
-fclean::
-	@rm -rf $(NAME)
+fclean:: clean;
 
 re:: fclean all
 
